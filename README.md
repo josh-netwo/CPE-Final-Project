@@ -1,1 +1,22 @@
-# CPE-Final-Project
+# Parallel & Series Circuit Analyzer
+
+A console program for calculating ideal resistor circuits. Choose series or
+parallel, enter the number of resistors, then enter each resistance in ohms and
+the supply voltage in volts. Results include equivalent resistance, total
+current and power, and each resistor's voltage, current, and power.
+
+## Run
+
+```text
+python circuit_analyzer.py
+```
+
+Choose `Q` to quit. The project uses Python's built-in features and does not
+require external packages. The code uses basic variables, lists, dictionaries,
+input/output, conditionals, loops, functions, and `try`/`except`.
+
+## Run the calculation checks
+
+```text
+python test_circuit_analyzer.py
+```
