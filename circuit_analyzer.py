@@ -1,40 +1,41 @@
 """Console-based analyzer for ideal resistor series and parallel circuits."""
 
-from circuit_calculations import analyze_circuit
+from circuit_calculations import analyzeCircuit
+from circuit_history import appendHistory
 
 
-def read_number(prompt, allow_zero):
+def readNumber(prompt, allowZero):
     """Ask until the user enters an acceptable number."""
-    valid_number = False
+    validNumber = False
 
-    while valid_number == False:
+    while validNumber == False:
         try:
             number = float(input(prompt))
-            if allow_zero:
+            if allowZero:
                 if number >= 0:
-                    valid_number = True
+                    validNumber = True
                 else:
-                    print("  Enter a finite number that is zero or greater.")
+                    print("  Enter a number that is zero or greater.")
             else:
                 if number > 0:
-                    valid_number = True
+                    validNumber = True
                 else:
-                    print("  Enter a finite number greater than zero.")
+                    print("  Enter a number greater than zero.")
         except ValueError:
             print("  Please enter a valid number.")
 
     return number
 
 
-def read_resistor_count():
+def readResistorCount():
     """Ask for a positive whole number of resistors."""
-    valid_count = False
+    validCount = False
 
-    while valid_count == False:
+    while validCount == False:
         try:
             count = int(input("Number of resistors: "))
             if count > 0:
-                valid_count = True
+                validCount = True
             else:
                 print("  Enter a number greater than zero.")
         except ValueError:
@@ -43,16 +44,16 @@ def read_resistor_count():
     return count
 
 
-def print_result(result):
+def printResult(result):
     """Display the circuit totals and a table of resistor values."""
     print()
     print("=" * 66)
     print("  " + result["mode"].upper() + " CIRCUIT RESULTS")
     print("=" * 66)
-    print(f"  Supply voltage       : {result['supply_voltage']:.2f} V")
-    print(f"  Equivalent resistance: {result['equivalent_resistance']:.2f} ohm")
-    print(f"  Total current        : {result['total_current']:.2f} A")
-    print(f"  Total power          : {result['total_power']:.2f} W")
+    print(f"  Supply voltage       : {result['supply voltage']:.2f} V")
+    print(f"  Equivalent resistance: {result['equivalent resistance']:.2f} ohm")
+    print(f"  Total current        : {result['total current']:.2f} A")
+    print(f"  Total power          : {result['total power']:.2f} W")
     print("-" * 66)
     print(f"  {'#':>2}  {'Resistance':>14}  {'Voltage':>14}  {'Current':>14}  {'Power':>12}")
     print(f"      {'(ohm)':>14}  {'(V)':>14}  {'(A)':>14}  {'(W)':>12}")
@@ -72,6 +73,20 @@ def print_result(result):
     print()
 
 
+def printHistory(history):
+    """Display calculations saved during this run."""
+    if not history:
+        print("\n  No calculations saved during this run yet.\n")
+        return
+
+    print("\n  CALCULATIONS FROM THIS RUN")
+    number = 0
+    for result in history:
+        number = number + 1
+        print("  Calculation", number)
+        printResult(result)
+
+
 def run():
     print("=" * 62)
     print("           PARALLEL & SERIES CIRCUIT ANALYZER")
@@ -80,25 +95,31 @@ def run():
     print("  Enter resistance in ohms and supply voltage in volts.")
 
     running = True
+    history = []
     while running:
-        print("\n  [1] Series circuit   [2] Parallel circuit   [Q] Quit")
+        print(
+            "\n  [1] Series circuit   [2] Parallel circuit   "
+            "[H] History   [Q] Quit"
+        )
         choice = input("  Select an option: ").lower()
 
         if choice == "q":
             print("\n  Goodbye.")
             running = False
+        elif choice == "h":
+            printHistory(history)
         elif choice == "1" or choice == "2":
-            resistor_count = read_resistor_count()
+            resistorCount = readResistorCount()
             resistances = []
             number = 0
 
-            for index in range(resistor_count):
+            for index in range(resistorCount):
                 number = index + 1
                 prompt = "Resistance of resistor " + str(number) + " in ohms: "
-                resistance = read_number(prompt, False)
+                resistance = readNumber(prompt, False)
                 resistances.append(resistance)
 
-            supply_voltage = read_number("Supply voltage in volts: ", True)
+            supplyVoltage = readNumber("Supply voltage in volts: ", True)
 
             if choice == "1":
                 mode = "series"
@@ -106,12 +127,14 @@ def run():
                 mode = "parallel"
 
             try:
-                result = analyze_circuit(mode, resistances, supply_voltage)
-                print_result(result)
+                result = analyzeCircuit(mode, resistances, supplyVoltage)
+                printResult(result)
+                appendHistory(history, result)
+                print("  Calculation added to this run's history.\n")
             except ZeroDivisionError:
                 print("  These values are too large or small to calculate.")
         else:
-            print("  Choose 1, 2, or Q.")
+            print("  Choose 1, 2, H, or Q.")
 
 
 run()

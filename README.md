@@ -15,6 +15,10 @@ Choose `Q` to quit. The project uses Python's built-in features and does not
 require external packages. The code uses basic variables, lists, dictionaries,
 input/output, conditionals, loops, functions, and `try`/`except`.
 
+Successful calculations are kept in a history list while the program is
+running. Choose `H` from the menu to view them. The history clears when you
+quit because this version uses only the course topics and does not write files.
+
 ## Run the calculation checks
 
 ```text

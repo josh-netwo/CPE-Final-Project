@@ -1,43 +1,43 @@
 """Functions for calculating ideal resistor series and parallel circuits."""
 
 
-def analyze_circuit(mode, resistances, supply_voltage):
+def analyzeCircuit(mode, resistances, supplyVoltage):
     """Return the circuit totals and a list of results for each resistor."""
     if mode == "series":
-        equivalent_resistance = 0
+        equivalentResistance = 0
         for resistance in resistances:
-            equivalent_resistance = equivalent_resistance + resistance
+            equivalentResistance = equivalentResistance + resistance
     else:
-        reciprocal_total = 0
+        reciprocalTotal = 0
         for resistance in resistances:
-            reciprocal_total = reciprocal_total + (1 / resistance)
-        equivalent_resistance = 1 / reciprocal_total
+            reciprocalTotal = reciprocalTotal + (1 / resistance)
+        equivalentResistance = 1 / reciprocalTotal
 
-    total_current = supply_voltage / equivalent_resistance
-    total_power = supply_voltage * total_current
-    resistor_results = []
+    totalCurrent = supplyVoltage / equivalentResistance
+    totalPower = supplyVoltage * totalCurrent
+    resistorResults = []
 
     for resistance in resistances:
         if mode == "series":
-            current = total_current
+            current = totalCurrent
             voltage = current * resistance
         else:
-            voltage = supply_voltage
+            voltage = supplyVoltage
             current = voltage / resistance
 
-        resistor_result = {
+        resistorResult = {
             "resistance": resistance,
             "voltage": voltage,
             "current": current,
             "power": voltage * current,
         }
-        resistor_results.append(resistor_result)
+        resistorResults.append(resistorResult)
 
     return {
         "mode": mode,
-        "equivalent_resistance": equivalent_resistance,
-        "supply_voltage": supply_voltage,
-        "total_current": total_current,
-        "total_power": total_power,
-        "resistors": resistor_results,
+        "equivalent resistance": equivalentResistance,
+        "supply voltage": supplyVoltage,
+        "total current": totalCurrent,
+        "total power": totalPower,
+        "resistors": resistorResults,
     }

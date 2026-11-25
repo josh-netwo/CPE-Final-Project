@@ -1,37 +1,51 @@
-"""Basic calculation checks for the circuit analyzer."""
+"""Basic calculation and history checks for the circuit analyzer."""
 
-from circuit_calculations import analyze_circuit
+from circuit_calculations import analyzeCircuit
+from circuit_history import appendHistory
 
 
-def check_value(name, actual, expected):
+def checkValue(name, actual, expected):
     if actual == expected:
         print("PASS:", name)
     else:
         print("FAIL:", name, "- expected", expected, "but got", actual)
 
 
-def check_series_circuit():
-    result = analyze_circuit("series", [10, 10], 20)
-    check_value("series equivalent resistance", result["equivalent_resistance"], 20)
-    check_value("series total current", result["total_current"], 1)
-    check_value("series first resistor voltage", result["resistors"][0]["voltage"], 10)
-    check_value("series total power", result["total_power"], 20)
+def checkSeriesCircuit():
+    result = analyzeCircuit("series", [10, 10], 20)
+    checkValue("series equivalent resistance", result["equivalent resistance"], 20)
+    checkValue("series total current", result["total current"], 1)
+    checkValue("series first resistor voltage", result["resistors"][0]["voltage"], 10)
+    checkValue("series total power", result["total power"], 20)
 
 
-def check_parallel_circuit():
-    result = analyze_circuit("parallel", [10, 10], 20)
-    check_value("parallel equivalent resistance", result["equivalent_resistance"], 5)
-    check_value("parallel total current", result["total_current"], 4)
-    check_value("parallel first resistor current", result["resistors"][0]["current"], 2)
-    check_value("parallel total power", result["total_power"], 80)
+def checkParallelCircuit():
+    result = analyzeCircuit("parallel", [10, 10], 20)
+    checkValue("parallel equivalent resistance", result["equivalent resistance"], 5)
+    checkValue("parallel total current", result["total current"], 4)
+    checkValue("parallel first resistor current", result["resistors"][0]["current"], 2)
+    checkValue("parallel total power", result["total power"], 80)
 
 
-def check_zero_voltage():
-    result = analyze_circuit("series", [10], 0)
-    check_value("zero-voltage current", result["total_current"], 0)
-    check_value("zero-voltage power", result["total_power"], 0)
+def checkZeroVoltage():
+    result = analyzeCircuit("series", [10], 0)
+    checkValue("zero-voltage current", result["total current"], 0)
+    checkValue("zero-voltage power", result["total power"], 0)
 
 
-check_series_circuit()
-check_parallel_circuit()
-check_zero_voltage()
+def checkHistory():
+    history = []
+    result = analyzeCircuit("series", [10], 20)
+    appendHistory(history, result)
+    checkValue("history calculation count", len(history), 1)
+    checkValue(
+        "history calculation resistance",
+        history[0]["equivalent resistance"],
+        10,
+    )
+
+
+checkSeriesCircuit()
+checkParallelCircuit()
+checkZeroVoltage()
+checkHistory()
