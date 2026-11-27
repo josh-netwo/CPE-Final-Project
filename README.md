@@ -17,7 +17,7 @@ input/output, conditionals, loops, functions, and `try`/`except`.
 
 Successful calculations are kept in a history list while the program is
 running. Choose `H` from the menu to view them. The history clears when you
-quit because this version uses only the course topics and does not write files.
+quit because this version uses only the course topics so it does not write files.
 
 ## Run the calculation checks
 
