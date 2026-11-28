@@ -1,4 +1,4 @@
-"""Basic calculation and history checks for the circuit analyzer."""
+#Basic calculation and history checks for the circuit analyzer.
 
 from circuit_calculations import analyzeCircuit
 from circuit_history import appendHistory

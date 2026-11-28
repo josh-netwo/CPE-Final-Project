@@ -1,11 +1,11 @@
-"""Console-based analyzer for ideal resistor series and parallel circuits."""
+#Console-based analyzer for ideal resistor series and parallel circuits
 
 from circuit_calculations import analyzeCircuit
 from circuit_history import appendHistory
 
 
 def readNumber(prompt, allowZero):
-    """Ask until the user enters an acceptable number."""
+    #Ask until the user enters an acceptable number.
     validNumber = False
 
     while validNumber == False:
@@ -28,7 +28,7 @@ def readNumber(prompt, allowZero):
 
 
 def readResistorCount():
-    """Ask for a positive whole number of resistors."""
+    #Ask for a positive whole number of resistors.
     validCount = False
 
     while validCount == False:
@@ -45,7 +45,7 @@ def readResistorCount():
 
 
 def printResult(result):
-    """Display the circuit totals and a table of resistor values."""
+    #Display the circuit totals and a table of resistor values.
     print()
     print("=" * 66)
     print("  " + result["mode"].upper() + " CIRCUIT RESULTS")
@@ -74,7 +74,7 @@ def printResult(result):
 
 
 def printHistory(history):
-    """Display calculations saved during this run."""
+    #Display calculations saved during this run.
     if not history:
         print("\n  No calculations saved during this run yet.\n")
         return

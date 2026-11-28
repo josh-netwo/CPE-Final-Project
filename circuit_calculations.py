@@ -1,8 +1,8 @@
-"""Functions for calculating ideal resistor series and parallel circuits."""
+#Functions for calculating ideal resistor series and parallel circuits
 
 
 def analyzeCircuit(mode, resistances, supplyVoltage):
-    """Return the circuit totals and a list of results for each resistor."""
+    #Return the circuit totals and a list of results for each resistor.
     if mode == "series":
         equivalentResistance = 0
         for resistance in resistances:
