@@ -1,6 +1,7 @@
-#Console-based analyzer for ideal resistor series and parallel circuits
+#Console-based analyzer for ideal resistor series and parallel circuits.
 
 from circuit_calculations import analyzeCircuit
+from circuit_insights import generateInsights
 from circuit_history import appendHistory
 
 
@@ -73,6 +74,39 @@ def printResult(result):
     print()
 
 
+def printInsights(result):
+    #Display the five engineering insight categories for a calculation.
+    insights = generateInsights(result)
+
+    print("\n" + "=" * 66)
+    print("  ENGINEERING ANALYSIS & INSIGHTS")
+    print("=" * 66)
+
+    for category, observations in insights.items():
+        print(f"\n  {category.upper()}")
+        for observation in observations:
+            print("  - " + observation)
+
+    print("\n" + "=" * 66)
+
+
+def askForInsights():
+    #Ask whether the user wants to view optional engineering insights.
+    while True:
+        print("\n" + "=" * 66)
+        print("Would you like to view the engineering analysis and insights?")
+        print("[Y] Yes   [N] No")
+        print("=" * 66)
+        choice = input("Select an option: ").strip().lower()
+
+        if choice == "y":
+            return True
+        elif choice == "n":
+            return False
+        else:
+            print("  Please enter Y or N.")
+
+
 def printHistory(history):
     #Display calculations saved during this run.
     if not history:
@@ -87,21 +121,28 @@ def printHistory(history):
         printResult(result)
 
 
-def run():
-    print("=" * 62)
-    print("           PARALLEL & SERIES CIRCUIT ANALYZER")
-    print("=" * 62)
-    print("  Calculate equivalent resistance, voltage, current, and power.")
-    print("  Enter resistance in ohms and supply voltage in volts.")
+def displayHeader():
+    #Display the main screen in the requested console layout.
+    line = "=" * 66
 
+    print(line)
+    print("PARALLEL & SERIES CIRCUIT ANALYZER".center(66))
+    print(line)
+    print()
+    print("Calculate equivalent resistance, voltage, current, and power.")
+    print("Enter resistance in ohms and supply voltage in volts.")
+    print()
+    print(line)
+
+
+def run():
+    displayHeader()
     running = True
     history = []
     while running:
-        print(
-            "\n  [1] Series circuit   [2] Parallel circuit   "
-            "[H] History   [Q] Quit"
-        )
-        choice = input("  Select an option: ").lower()
+        print("[1] Series circuit   [2] Parallel circuit   [H] History   [Q] Quit")
+        print("=" * 66)
+        choice = input("Select an option: ").lower()
 
         if choice == "q":
             print("\n  Goodbye.")
@@ -109,6 +150,13 @@ def run():
         elif choice == "h":
             printHistory(history)
         elif choice == "1" or choice == "2":
+            if choice == "1":
+                mode = "series"
+            else:
+                mode = "parallel"
+
+            print("\nChosen Circuit: " + mode.capitalize())
+            print("-" * 66)
             resistorCount = readResistorCount()
             resistances = []
             number = 0
@@ -121,14 +169,11 @@ def run():
 
             supplyVoltage = readNumber("Supply voltage in volts: ", True)
 
-            if choice == "1":
-                mode = "series"
-            else:
-                mode = "parallel"
-
             try:
                 result = analyzeCircuit(mode, resistances, supplyVoltage)
                 printResult(result)
+                if askForInsights():
+                    printInsights(result)
                 appendHistory(history, result)
                 print("  Calculation added to this run's history.\n")
             except ZeroDivisionError:

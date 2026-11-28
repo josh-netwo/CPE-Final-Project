@@ -1,6 +1,14 @@
 #Basic calculation and history checks for the circuit analyzer.
 
 from circuit_calculations import analyzeCircuit
+from circuit_insights import (
+    analyzeCircuitBehavior,
+    analyzeCurrent,
+    analyzeEngineeringRecommendations,
+    analyzeResistance,
+    analyzeVoltage,
+    generateInsights,
+)
 from circuit_history import appendHistory
 
 
@@ -45,7 +53,42 @@ def checkHistory():
     )
 
 
+def checkSeriesInsights():
+    result = analyzeCircuit("series", [10, 20, 30], 12)
+    resistanceInsights = analyzeResistance(result)
+    voltageInsights = analyzeVoltage(result)
+    currentInsights = analyzeCurrent(result)
+    behaviorInsight = analyzeCircuitBehavior(result)
+    recommendationInsights = analyzeEngineeringRecommendations(result)
+    allInsights = generateInsights(result)
+
+    checkValue("series highest resistance identified", "R3" in resistanceInsights[0], True)
+    checkValue("series lowest resistance identified", "R1" in resistanceInsights[1], True)
+    checkValue("series highest voltage drop identified", "R3" in voltageInsights[0], True)
+    checkValue("series current explanation", "same current" in currentInsights[0], True)
+    checkValue("series open component breaks entire path", "entire circuit" in behaviorInsight, True)
+    checkValue("series recommendations are provided", len(recommendationInsights) >= 3, True)
+    checkValue("all five insight categories generated", len(allInsights), 5)
+
+
+def checkParallelInsights():
+    result = analyzeCircuit("parallel", [10, 20, 40], 12)
+    resistanceInsights = analyzeResistance(result)
+    voltageInsights = analyzeVoltage(result)
+    currentInsights = analyzeCurrent(result)
+    behaviorInsight = analyzeCircuitBehavior(result)
+
+    checkValue("parallel highest resistance identified", "R3" in resistanceInsights[0], True)
+    checkValue("parallel lowest resistance identified", "R1" in resistanceInsights[1], True)
+    checkValue("parallel equal voltage explanation", "same voltage" in voltageInsights[0], True)
+    checkValue("parallel highest current branch identified", "R1" in currentInsights[0], True)
+    checkValue("parallel open branch leaves other branches operating", "other intact branches" in behaviorInsight, True)
+
+
+
 checkSeriesCircuit()
 checkParallelCircuit()
 checkZeroVoltage()
 checkHistory()
+checkSeriesInsights()
+checkParallelInsights()

@@ -1,4 +1,4 @@
-#Functions for calculating ideal resistor series and parallel circuits
+#Functions for calculating ideal resistor series and parallel circuits.
 
 
 def analyzeCircuit(mode, resistances, supplyVoltage):
